@@ -1,0 +1,528 @@
+{
+  "info": {
+    "name": "LinkedIn Analytics Backend API",
+    "description": "Complete API collection for LinkedIn Analytics Backend with sample data",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000",
+      "type": "string"
+    },
+    {
+      "key": "access_token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{access_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Register Admin User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@example.com\",\n  \"username\": \"admin\",\n  \"password\": \"admin123\",\n  \"role\": \"admin\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "Register Regular User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@example.com\",\n  \"username\": \"user1\",\n  \"password\": \"user123\",\n  \"role\": \"user\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "register"]
+            }
+          }
+        },
+        {
+          "name": "Login Admin",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('access_token', response.access_token);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "username",
+                  "value": "admin@example.com"
+                },
+                {
+                  "key": "password",
+                  "value": "admin123"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Login User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('access_token', response.access_token);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "username",
+                  "value": "user@example.com"
+                },
+                {
+                  "key": "password",
+                  "value": "user123"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Get Current User",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/auth/me",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "me"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Posts",
+      "item": [
+        {
+          "name": "Create Draft Post",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"My First LinkedIn Post\",\n  \"content\": \"This is my first post on LinkedIn! Excited to share my thoughts and connect with professionals in my field.\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/posts/",
+              "host": ["{{base_url}}"],
+              "path": ["posts", ""]
+            }
+          }
+        },
+        {
+          "name": "Create Scheduled Post",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Scheduled Post About AI\",\n  \"content\": \"Artificial Intelligence is revolutionizing the way we work. Here are some key trends to watch in 2024.\",\n  \"scheduled_at\": \"2024-12-25T10:00:00Z\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/posts/",
+              "host": ["{{base_url}}"],
+              "path": ["posts", ""]
+            }
+          }
+        },
+        {
+          "name": "Get All Posts",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/posts/?limit=10&offset=0",
+              "host": ["{{base_url}}"],
+              "path": ["posts", ""],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "offset",
+                  "value": "0"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Posts by Status",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/posts/?status=published&limit=5",
+              "host": ["{{base_url}}"],
+              "path": ["posts", ""],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "published"
+                },
+                {
+                  "key": "limit",
+                  "value": "5"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Specific Post",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/posts/1",
+              "host": ["{{base_url}}"],
+              "path": ["posts", "1"]
+            }
+          }
+        },
+        {
+          "name": "Update Post",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Updated: My First LinkedIn Post\",\n  \"content\": \"This is my updated first post on LinkedIn! I've added some new insights about professional networking.\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/posts/1",
+              "host": ["{{base_url}}"],
+              "path": ["posts", "1"]
+            }
+          }
+        },
+        {
+          "name": "Publish Post",
+          "request": {
+            "method": "POST",
+            "url": {
+              "raw": "{{base_url}}/posts/1/publish",
+              "host": ["{{base_url}}"],
+              "path": ["posts", "1", "publish"]
+            }
+          }
+        },
+        {
+          "name": "Delete Post",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{base_url}}/posts/1",
+              "host": ["{{base_url}}"],
+              "path": ["posts", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Analytics",
+      "item": [
+        {
+          "name": "Add Like Reaction",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reaction_type\": \"like\",\n  \"count\": 5\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/analytics/reactions/1",
+              "host": ["{{base_url}}"],
+              "path": ["analytics", "reactions", "1"]
+            }
+          }
+        },
+        {
+          "name": "Add Praise Reaction",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reaction_type\": \"praise\",\n  \"count\": 3\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/analytics/reactions/1",
+              "host": ["{{base_url}}"],
+              "path": ["analytics", "reactions", "1"]
+            }
+          }
+        },
+        {
+          "name": "Add Interest Reaction",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reaction_type\": \"interest\",\n  \"count\": 7\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/analytics/reactions/1",
+              "host": ["{{base_url}}"],
+              "path": ["analytics", "reactions", "1"]
+            }
+          }
+        },
+        {
+          "name": "Update Reaction Count",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"count\": 10\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/analytics/reactions/1/like",
+              "host": ["{{base_url}}"],
+              "path": ["analytics", "reactions", "1", "like"]
+            }
+          }
+        },
+        {
+          "name": "Get Post Analytics",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/analytics/post/1",
+              "host": ["{{base_url}}"],
+              "path": ["analytics", "post", "1"]
+            }
+          }
+        },
+        {
+          "name": "Get Top Engaging Posts",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/analytics/top-engaging?top_n=5",
+              "host": ["{{base_url}}"],
+              "path": ["analytics", "top-engaging"],
+              "query": [
+                {
+                  "key": "top_n",
+                  "value": "5"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Analytics Graph Data",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/analytics/graph-data/1?days=30",
+              "host": ["{{base_url}}"],
+              "path": ["analytics", "graph-data", "1"],
+              "query": [
+                {
+                  "key": "days",
+                  "value": "30"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Analytics Overview",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/analytics/overview",
+              "host": ["{{base_url}}"],
+              "path": ["analytics", "overview"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin",
+      "item": [
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/admin/users",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "users"]
+            }
+          }
+        },
+        {
+          "name": "Get All Posts",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/admin/posts",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "posts"]
+            }
+          }
+        },
+        {
+          "name": "Get Admin Stats",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/admin/stats",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "stats"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Health Check",
+      "item": [
+        {
+          "name": "Root Endpoint",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/",
+              "host": ["{{base_url}}"],
+              "path": [""]
+            }
+          }
+        },
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/health",
+              "host": ["{{base_url}}"],
+              "path": ["health"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
