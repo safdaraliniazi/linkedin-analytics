@@ -1,0 +1,30 @@
+services:
+  - type: web
+    name: linkedin-analytics-backend
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: linkedin-analytics-db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ALGORITHM
+        value: HS256
+      - key: ACCESS_TOKEN_EXPIRE_MINUTES
+        value: 30
+      - key: API_TITLE
+        value: "LinkedIn Analytics Backend API"
+      - key: API_VERSION
+        value: "1.0.0"
+      - key: API_DESCRIPTION
+        value: "A comprehensive LinkedIn analytics platform backend built with FastAPI and PostgreSQL"
+
+databases:
+  - name: linkedin-analytics-db
+    plan: free
+    databaseName: linkedin_analytics
+    user: linkedin_analytics_user

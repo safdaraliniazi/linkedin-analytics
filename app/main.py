@@ -5,6 +5,11 @@ from app.config import settings
 from app.database import engine, Base
 from app.routers import auth, posts, analytics, admin
 from app.scheduler import start_scheduler, stop_scheduler
+import logging
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 # Create database tables
 Base.metadata.create_all(bind=engine)
@@ -13,10 +18,15 @@ Base.metadata.create_all(bind=engine)
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Startup
+    logger.info("Starting LinkedIn Analytics Backend...")
+    logger.info(f"Database URL: {settings.database_url}")
     await start_scheduler()
+    logger.info("Post scheduler started")
     yield
     # Shutdown
+    logger.info("Shutting down LinkedIn Analytics Backend...")
     await stop_scheduler()
+    logger.info("Post scheduler stopped")
 
 
 # Create FastAPI app
@@ -54,4 +64,23 @@ async def root():
 
 @app.get("/health")
 async def health_check():
-    return {"status": "healthy"}
+    """Health check endpoint for monitoring"""
+    try:
+        # Test database connection
+        from app.database import engine
+        with engine.connect() as connection:
+            connection.execute("SELECT 1")
+        
+        return {
+            "status": "healthy",
+            "database": "connected",
+            "version": settings.api_version,
+            "environment": "production" if "render" in settings.database_url else "development"
+        }
+    except Exception as e:
+        logger.error(f"Health check failed: {e}")
+        return {
+            "status": "unhealthy",
+            "database": "disconnected",
+            "error": str(e)
+        }
